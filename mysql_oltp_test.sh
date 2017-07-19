@@ -63,10 +63,10 @@ EOF
 
     echo -e "\n---------------\n准备测试数据.\n---------------"
     sysbench $lua_dir/$oltp_script --mysql-host=$m_host \
-    --mysql-port=$m_port \
-    --mysql-user=$m_user \
-    --mysql-password=$m_passwd \
-    --mysql-db=$m_db \
+    --mysql-port=$5 \
+    --mysql-user=$6 \
+    --mysql-password=$7 \
+    --mysql-db=$4 \
     --db-driver=mysql \
     --tables=$tables_count \
     --table-size=$table_size \
@@ -85,10 +85,10 @@ EOF
             #下条命令中，egerp之后的操作是为了对sysbench的输出做筛选和格式化，以便插入数据库
 
             sysbench $lua_dir/$oltp_script --mysql-host=$m_host \
-            --mysql-port=$m_port \
-            --mysql-user=$m_user \
-            --mysql-password=$m_passwd \
-            --mysql-db=$m_db \
+            --mysql-port=$5 \
+            --mysql-user=$6 \
+            --mysql-password=$7 \
+            --mysql-db=$4 \
             --db-driver=mysql \
             --tables=$tables_count \
             --table-size=$table_size \
@@ -125,10 +125,10 @@ EOF
 
     echo -e "\n---------------\n清除测试数据.\n---------------"
     sysbench $lua_dir/$oltp_script --mysql-host=$m_host \
-    --mysql-port=$m_port \
-    --mysql-user=$m_user \
-    --mysql-password=$m_passwd \
-    --mysql-db=$m_db \
+    --mysql-port=$5 \
+    --mysql-user=$6 \
+    --mysql-password=$7 \
+    --mysql-db=$4 \
     --db-driver=mysql \
     --tables=$tables_count \
     --table-size=$table_size \
@@ -202,7 +202,7 @@ sb_chart() {
  
 #脚本使用说明/参数判断
 if [ $# -eq 1 ] && [ $1 == "-h" -o $1 == "--help" ];then
-    echo -e "\nUsage: $0 test (test_scenario) (test_type)\n       $0 analyse\n       $0 chart [scenario]...\n"
+    echo -e "\nUsage: $0 test (test_scenario) (test_type) (mysql_host) (mysql_port) (mysql_user) (mysql_password)\n       $0 analyse\n       $0 chart [scenario]...\n"
     echo ----------
     echo -e "测试: 子命令test"
     echo -e "      test_scenario: 自定义的测试场景名"
@@ -216,8 +216,8 @@ if [ $# -eq 1 ] && [ $1 == "-h" -o $1 == "--help" ];then
     echo -e "      chart (对分析结果中的所有测试场景画图)"
     echo -e "      chart scenario ... (对指定的测试场景画图，场景名依据先前自定义的名称)\n"
     exit -1
-elif [ "$1" == "test" -a  $# -eq 3 ];then
-    sb_test $1 $2 $3
+elif [ "$1" == "test" -a  $# -eq 7 ];then
+    sb_test $1 $2 $3 $4 $5 $6 $7
 elif [ "$1" == "analyse" -a $# -eq 1 ];then
     sb_analyse
 elif [ "$1" == "chart" ];then
@@ -226,5 +226,5 @@ elif [ "$1" == "chart" ];then
     arg_len=${#arg[@]}
     sb_chart ${arg[@]:1:$arg_len-1}
 else
-    echo -e "\nUsage: $0 test (test_scenario) (test_type)\n       $0 analyse\n       $0 chart [scenario]...\n"
+    echo -e "\nUsage: $0 test (test_scenario) (test_type) (mysql_host) (mysql_port) (mysql_user) (mysql_password)\n       $0 analyse\n       $0 chart [scenario]...\n"
 fi
